@@ -9,7 +9,7 @@
  *
  */
 #include "dwt.h"
-#include "stm32f4xx.h"
+#include "main.h"
 
 /**
  * @brief dwt counter init

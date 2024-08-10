@@ -24,8 +24,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "application.h"
-#include "bme280.h"
-#include "dwt.h"
+#include "libs/third_party/hw/bme280/bme280.h"
+#include "libs/hw/dwt/dwt.h"
 //>>---------------------- Log control
 #define LOG_MODULE_NAME main
 #if defined(NDEBUG)

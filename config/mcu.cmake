@@ -15,7 +15,7 @@ set(HAL_INCLUDE_DIRS
 # region RTT
 set(RTT_LIB rtt)
 set(RTT_VERSION SEGGER_RTT_V762c)
-set(RTT_DIR ${LIBS_DIR}/${RTT_VERSION})
+set(RTT_DIR ${LIBS_DIR}/third_party/hw/${RTT_VERSION})
 set(RTT_INCLUDE_DIRS
     ${RTT_DIR}/Config
     ${RTT_DIR}/RTT)
