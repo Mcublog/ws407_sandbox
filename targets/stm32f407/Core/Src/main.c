@@ -24,8 +24,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "application.h"
-#include "libs/third_party/hw/bme280/bme280.h"
-#include "libs/hw/dwt/dwt.h"
 //>>---------------------- Log control
 #define LOG_MODULE_NAME main
 #if defined(NDEBUG)
@@ -48,108 +46,20 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define SAMPLE_COUNT  UINT8_C(50)
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-static const uint32_t kI2CTimeoutMs = 10;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-BME280_INTF_RET_TYPE i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr)
-{
-    HAL_StatusTypeDef err = HAL_I2C_Mem_Read((I2C_HandleTypeDef *)intf_ptr, (BME280_I2C_ADDR_PRIM << 1), reg_addr,
-                                             1, reg_data, len, kI2CTimeoutMs);
-    // LOG_DEBUG("read_i2c: %d", err);
-    return err == HAL_OK ? BME280_OK : BME280_E_COMM_FAIL;
-}
-
-BME280_INTF_RET_TYPE i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len,
-                               void *intf_ptr)
-{
-    HAL_StatusTypeDef err = HAL_I2C_Mem_Write(
-        (I2C_HandleTypeDef *)intf_ptr, (BME280_I2C_ADDR_PRIM << 1), reg_addr, 1, (uint8_t *)reg_data, len, kI2CTimeoutMs);
-    // LOG_DEBUG("i2c_write: %d", err);
-    return err == HAL_OK ? BME280_OK : BME280_E_COMM_FAIL;
-}
-
-void delay_us_i2c(uint32_t period, void *intf_ptr)
-{
-    // LOG_DEBUG("delay_us_i2c: %d us", period);
-    dwt_delay_us(period);
-}
-
-static int8_t get_temperature(uint32_t period, struct bme280_dev *dev)
-{
-    int8_t rslt = BME280_E_NULL_PTR;
-    int8_t idx = 0;
-    uint8_t status_reg;
-    struct bme280_data comp_data;
-
-    while (idx < SAMPLE_COUNT)
-    {
-        rslt = bme280_get_regs(BME280_REG_STATUS, &status_reg, 1, dev);
-        LOG_INFO("bme280_get_regs", rslt);
-
-        if (status_reg & BME280_STATUS_MEAS_DONE)
-        {
-            /* Measurement time delay given to read sample */
-            dev->delay_us(period, dev->intf_ptr);
-
-            /* Read compensated data */
-            rslt = bme280_get_sensor_data(BME280_TEMP, &comp_data, dev);
-            LOG_INFO("bme280_get_sensor_data", rslt);
-
-            comp_data.temperature = comp_data.temperature / 100;
-            LOG_DEBUG("Temperature[%d]:   %ld deg C\n", idx, (long int)comp_data.temperature);
-            idx++;
-        }
-    }
-
-    return rslt;
-}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-struct bme280_dev bmp280 =
-    {
-        /*! Chip Id */
-        .chip_id = BME280_CHIP_ID,
-
-        /*! Interface Selection
-         * For SPI, intf = BME280_SPI_INTF
-         * For I2C, intf = BME280_I2C_INTF
-         */
-        .intf = BME280_I2C_INTF,
-
-        /*!
-         * The interface pointer is used to enable the user
-         * to link their interface descriptors for reference during the
-         * implementation of the read and write interfaces to the
-         * hardware.
-         */
-        .intf_ptr = (void *)&hi2c1,
-
-        /*! Variable to store result of read/write function */
-        .intf_rslt = BME280_OK,
-
-        /*! Read function pointer */
-        .read = i2c_read,
-
-        /*! Write function pointer */
-        .write = i2c_write,
-
-        /*! Delay function pointer */
-        .delay_us = delay_us_i2c,
-
-        // /*! Trim data */
-        .calib_data = {0}
-};
 /* USER CODE END 0 */
 
 /**
@@ -182,52 +92,6 @@ int main(void)
     MX_GPIO_Init();
     MX_I2C1_Init();
     /* USER CODE BEGIN 2 */
-    int8_t err = bme280_init(&bmp280);
-    uint32_t period = 0;
-    LOG_DEBUG("bme280_init: %d", err);
-    struct bme280_settings settings;
-    err = bme280_get_sensor_settings(&settings, &bmp280);
-    LOG_INFO("bme280_get_sensor_settings", err);
-
-    /* Always read the current settings before writing, especially when all the configuration is not modified */
-    err = bme280_get_sensor_settings(&settings, &bmp280);
-    LOG_INFO("bme280_get_sensor_settings", err);
-
-    /* Configuring the over-sampling rate, filter coefficient and standby time */
-    /* Overwrite the desired settings */
-    settings.filter = BME280_FILTER_COEFF_2;
-
-    /* Over-sampling rate for humidity, temperature and pressure */
-    settings.osr_h = BME280_OVERSAMPLING_1X;
-    settings.osr_p = BME280_OVERSAMPLING_1X;
-    settings.osr_t = BME280_OVERSAMPLING_1X;
-
-    /* Setting the standby time */
-    settings.standby_time = BME280_STANDBY_TIME_0_5_MS;
-
-    err = bme280_set_sensor_settings(BME280_SEL_ALL_SETTINGS, &settings, &bmp280);
-    LOG_INFO("bme280_set_sensor_settings", err);
-
-    /* Always set the power mode after setting the configuration */
-    err = bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bmp280);
-    LOG_INFO("bme280_set_power_mode", err);
-
-    /* Calculate measurement time in microseconds */
-    err = bme280_cal_meas_delay(&period, &settings);
-    LOG_INFO("bme280_cal_meas_delay", err);
-
-    printf("\nTemperature calculation (Data displayed are compensated values)\n");
-    printf("Measurement time : %lu us\n\n", (long unsigned int)period);
-
-    err = get_temperature(period, &bmp280);
-    LOG_INFO("get_temperature", err);
-
-    while (1)
-    {
-        err = get_temperature(period, &bmp280);
-        LOG_INFO("get_temperature", err);
-        HAL_Delay(1000);
-    }
 
     application();
     /* USER CODE END 2 */

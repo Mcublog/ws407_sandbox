@@ -4,14 +4,14 @@ include(${PROJECT_SOURCE_DIR}/hwtest/common.cmake)
 include(${PROJECT_SOURCE_DIR}/libs/hw/list.cmake)
 include(${PROJECT_SOURCE_DIR}/libs/third_party/hw/list.cmake)
 
-set(HWTEST_TARGET hwtest_bme280)
+set(HWTEST_TARGET hwtest_ssd1309)
 
 # Removed unused files
-list(REMOVE_ITEM HAL_SOURCES ${PROJECT_SOURCE_DIR}/targets/stm32f407/Core/Src/main.c)
+list(REMOVE_ITEM APP_SOURCES ${APP_DIR}/application.c)
 
 # Build lib
 add_executable(${HWTEST_TARGET}
-    ${CMAKE_CURRENT_SOURCE_DIR}/bme280_test.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/application.cpp
     ${HAL_SOURCES}
     ${APP_SOURCES}
     ${RTT_SOURCES}
@@ -32,7 +32,7 @@ target_include_directories(${HWTEST_TARGET}
 target_compile_definitions(${HWTEST_TARGET} PRIVATE ${symbols_SYMB})
 
 # Compiler options
-target_compile_options(${HWTEST_TARGET} PRIVATE ${ARM_NONE_EABI_FLAGS})
+target_compile_options(${HWTEST_TARGET} PRIVATE ${ARM_NONE_EABI_FLAGS} -Wno-volatile)
 
 # Linker options
 target_link_options(${HWTEST_TARGET} PRIVATE ${STM32F407_LINKER_OPTION})
