@@ -1,28 +1,15 @@
-/* USER CODE BEGIN Header */
 /**
- ******************************************************************************
- * @file           : main.c
- * @brief          : Main program body
- ******************************************************************************
- * @attention
+ * @file application.cpp
+ * @author Viacheslav (viacheslav@mcublog.ru)
+ * @brief
+ * @version 0.1
+ * @date 2024-08-10
  *
- * Copyright (c) 2022 STMicroelectronics.
- * All rights reserved.
+ * @copyright Viacheslav mcublog (c) 2024
  *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "gpio.h"
 #include "i2c.h"
-
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "application.h"
 #include "app/version.h"
 #include "app/utils/delay.h"
@@ -40,12 +27,19 @@
 void application()
 {
     bool led = false;
+    static constexpr uint8_t kI2CTimeoutMs = 10;
+    uint8_t addr = 0;
     LOG_INFO("Version: %s", FW_VERSION);
     while (1)
     {
-        delay_ms(1000);
+        delay_ms(100);
         io_gpio_led(led);
         led ^= true;
+        HAL_StatusTypeDef err =
+            HAL_I2C_IsDeviceReady(&hi2c1, (addr << 1), 1, kI2CTimeoutMs);
+        if (err == HAL_StatusTypeDef::HAL_OK)
+            LOG_INFO("find addr[0x%02x[0x%02x]]: %d", addr, addr>>1, err);
+        addr++;
         LOG_INFO("working...");
     }
 }

@@ -32,7 +32,7 @@ target_include_directories(${HWTEST_TARGET}
 target_compile_definitions(${HWTEST_TARGET} PRIVATE ${symbols_SYMB})
 
 # Compiler options
-target_compile_options(${HWTEST_TARGET} PRIVATE ${ARM_NONE_EABI_FLAGS} -Wno-volatile)
+target_compile_options(${HWTEST_TARGET} PRIVATE ${ARM_NONE_EABI_FLAGS})
 
 # Linker options
 target_link_options(${HWTEST_TARGET} PRIVATE ${STM32F407_LINKER_OPTION})
