@@ -16,6 +16,7 @@ add_executable(${HWTEST_TARGET}
     ${APP_SOURCES}
     ${RTT_SOURCES}
     ${DWT_SOURCES}
+    ${INA219_SOURCES}
 )
 
 # Include paths
