@@ -1,3 +1,7 @@
 file(GLOB_RECURSE BME280_SOURCES
     ${PROJECT_SOURCE_DIR}/libs/third_party/hw/bme280/*.c
 )
+
+file(GLOB_RECURSE SSD1309_SOURCES
+    ${PROJECT_SOURCE_DIR}/libs/third_party/hw/stm32-ssd1306/ssd1306/*.c
+)

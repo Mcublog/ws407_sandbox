@@ -17,11 +17,13 @@ add_executable(${HWTEST_TARGET}
     ${RTT_SOURCES}
     ${BME280_SOURCES}
     ${DWT_SOURCES}
+    ${SSD1309_SOURCES}
 )
 
 # Include paths
 target_include_directories(${HWTEST_TARGET}
     PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}
     ${HAL_INCLUDE_DIRS}
     ${APP_DIRS}

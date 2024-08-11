@@ -39,7 +39,7 @@ set(symbols_SYMB
 set(CPU_PARAMETERS -mthumb
     # This needs attention to properly set for used MCU
     -mcpu=cortex-m4
-    -mfpu=fpv5-d16
+    -mfpu=fpv4-sp-d16
     -mfloat-abi=hard)
 
 set(ARM_NONE_EABI_FLAGS
@@ -70,9 +70,12 @@ set(STM32F407_LINKER_OPTION
     -specs=nosys.specs
     -u _printf_float                # STDIO float formatting support
     -Wl,--start-group
+    -lc
+    -lm
     -fno-exceptions
     -fno-rtti
     -Wl,--end-group
+    -Wl,--gc-sections # removed unused functions
     -Wl,--print-memory-usage
 )
 # endregion
