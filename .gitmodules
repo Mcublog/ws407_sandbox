@@ -1,0 +1,3 @@
+[submodule "libs/third_party/hw/ina219"]
+	path = libs/third_party/hw/ina219
+	url = https://github.com/libdriver/ina219.git
