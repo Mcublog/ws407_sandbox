@@ -34,5 +34,28 @@
             ],
             "group": "test"
         },
+        {
+            "label": "Delete: build dir",
+            "type": "shell",
+            "windows": {
+                "command": "rm",
+                "args": [
+                    "build",
+                    "-r",
+                    "-force"
+                ]
+            },
+            "linux": {
+                "command": "rm",
+                "args": [
+                    "-rf",
+                    "build"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            }
+        }
     ]
 }

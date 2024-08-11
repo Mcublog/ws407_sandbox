@@ -14,5 +14,6 @@
     "files.associations": {
         "common_type.h": "c"
     },
-    "cmake.generator": "Unix Makefiles"
+    "cmake.generator": "Unix Makefiles",
+    "task.autoDetect":"off",
 }
