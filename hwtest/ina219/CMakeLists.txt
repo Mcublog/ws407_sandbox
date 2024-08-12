@@ -12,6 +12,7 @@ list(REMOVE_ITEM APP_SOURCES ${APP_DIR}/application.c)
 # Build lib
 add_executable(${HWTEST_TARGET}
     ${CMAKE_CURRENT_SOURCE_DIR}/application.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/impl/driver_ina219_interface.c
     ${HAL_SOURCES}
     ${APP_SOURCES}
     ${RTT_SOURCES}
@@ -27,6 +28,8 @@ target_include_directories(${HWTEST_TARGET}
     ${HAL_INCLUDE_DIRS}
     ${APP_DIRS}
     ${RTT_INCLUDE_DIRS}
+    ${PROJECT_SOURCE_DIR}/libs/third_party/hw/ina219/src
+    ${PROJECT_SOURCE_DIR}/libs/third_party/hw/ina219/interface/
 )
 
 # Project symbols
