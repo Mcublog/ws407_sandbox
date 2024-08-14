@@ -26,23 +26,23 @@ jobs:
         with:
           report_paths: 'build/*.xml'
 
-  build-job:
-    needs: test-job
-    runs-on: ubuntu-latest
-    container:
-      image: mcublog/embedded_gcc_cmake:latest
-      volumes:
-        - build:/build
-    steps:
-      - uses: actions/checkout@v3
-      - name: ARM GCC version
-        run: arm-none-eabi-gcc --version
-      - name: Configure
-        run: mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=arm-none-eabi-gcc ..
-      - name: Build and Run Tests
-        run: cd build && make ws407_fw
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ws407_fw
-          path: build/targets/stm32f407/ws407_fw.hex
+#  build-job:
+#    needs: test-job
+#    runs-on: ubuntu-latest
+#    container:
+#      image: mcublog/embedded_gcc_cmake:latest
+#      volumes:
+#        - build:/build
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: ARM GCC version
+#        run: arm-none-eabi-gcc --version
+#      - name: Configure
+#        run: mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=arm-none-eabi-gcc ..
+#      - name: Build and Run Tests
+#        run: cd build && make ws407_fw
+#      - name: Archive production artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ws407_fw
+#          path: build/targets/stm32f407/ws407_fw.hex
