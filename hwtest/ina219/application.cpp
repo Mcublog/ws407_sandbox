@@ -91,13 +91,19 @@ void application()
     {
         delay_ms(1000);
         int16_t rawA = 0, rawV = 0;
-        float current, voltage = 0.0f;
+        uint16_t rawB = 0;
+        float current, voltage = 0.0f, bus = 0.0f;
         res = ina219_read_current(&gs_handle, &rawA, &current);
         res |= ina219_read_shunt_voltage(&gs_handle, &rawV, &voltage);
+        res |= ina219_read_bus_voltage(&gs_handle, &rawB, &bus);
         if (res != 0)
-            LOG_ERROR("ina219: reading");
+        {
+            LOG_ERROR("reading ... continue");
+            continue;
+        }
         LOG_INFO("raw[%d] current: %d mA", rawA, (int)roundf(current));
         LOG_INFO("raw[%d] voltage: %d mV", rawV, (int)roundf(voltage));
+        LOG_INFO("raw[%d] bus  mV: %d mV", rawB, (int)roundf(bus));
         io_gpio_led(led);
         led ^= true;
     }
