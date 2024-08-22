@@ -32,20 +32,17 @@ void application()
 {
     LOG_INFO("Version: %s", FW_VERSION);
 
-    struct timeval tv = {};
-    struct timezone tz ={};
-    settimeofday(&tv, &tz);
-
-    time_t t = time(NULL);
-    clock_t c = clock();
-
-    LOG_INFO("time: %d clock: %d", t, c);
-
+    struct timeval tv = {.tv_sec=1724350643, .tv_usec=0};
+    settimeofday(&tv, NULL);
     bool led = false;
 
     while (1)
     {
+        clock_t c = clock();
+        LOG_INFO("clock: %d", c);
         delay_ms(1000);
+        time_t t = time(NULL);
+        LOG_INFO("time: %s", ctime(&t));
         io_gpio_led(led);
         led ^= true;
     }
