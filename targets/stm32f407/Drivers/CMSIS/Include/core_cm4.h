@@ -1957,13 +1957,7 @@ __NO_RETURN __STATIC_INLINE void __NVIC_SystemReset(void)
 
 #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1U)
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpragmas"
-#pragma GCC diagnostic ignored "-Wvolatile"
-
 #include "mpu_armv7.h"
-
-#pragma GCC diagnostic pop
 
 #endif
 

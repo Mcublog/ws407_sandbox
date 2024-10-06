@@ -13,7 +13,7 @@
 #include <sys/time.h>
 
 #include "main.h"
-#include "i2c.h"
+#include "spi.h"
 #include "application.h"
 #include "app/version.h"
 #include "app/utils/delay.h"
