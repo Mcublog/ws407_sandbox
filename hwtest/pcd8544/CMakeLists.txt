@@ -9,9 +9,14 @@ set(HWTEST_TARGET hwtest_pcd8544)
 # Removed unused files
 list(REMOVE_ITEM APP_SOURCES ${APP_DIR}/application.c)
 
+file(GLOB_RECURSE HWTEST_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.c
+)
+
 # Build lib
 add_executable(${HWTEST_TARGET}
-    ${CMAKE_CURRENT_SOURCE_DIR}/application.cpp
+    ${HWTEST_SOURCES}
     ${HAL_SOURCES}
     ${APP_SOURCES}
     ${RTT_SOURCES}

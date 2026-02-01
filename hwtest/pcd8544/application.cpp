@@ -12,6 +12,7 @@
 
 #include "main.h"
 #include "spi.h"
+#include "Adafruit_PCD8544.h"
 #include "application.h"
 #include "app/version.h"
 #include "app/utils/delay.h"
@@ -33,9 +34,8 @@ extern SPI_HandleTypeDef hspi1;
 #define LCD_C     (GPIO_PIN_RESET)
 #define LCD_D     (GPIO_PIN_SET)
 
-#define LCD_X     84
-#define LCD_Y     48
-
+#define LCD_X     (84)
+#define LCD_Y     (48)
 
 static const uint8_t ASCII[][5] =
 {
@@ -139,25 +139,63 @@ static const uint8_t ASCII[][5] =
 
 void LcdWrite(GPIO_PinState dc, uint8_t data)
 {
-    HAL_GPIO_WritePin(LCD_DC_GPIO_Port, LCD_DC_Pin, dc);
     HAL_GPIO_WritePin(LCD_CE_GPIO_Port, LCD_CE_Pin, GPIO_PIN_RESET);
+    delay_ms(1);
+    HAL_GPIO_WritePin(LCD_DC_GPIO_Port, LCD_DC_Pin, dc);
     delay_ms(1);
     HAL_SPI_Transmit(&hspi1, &data, 1, 10);
     delay_ms(1);
     HAL_GPIO_WritePin(LCD_CE_GPIO_Port, LCD_CE_Pin, GPIO_PIN_SET);
+    delay_ms(1);
+}
+
+void command(uint8_t d)
+{
+  LcdWrite(LCD_C, d);
+}
+
+void setBias(uint8_t val) {
+  if (val > 0x07) {
+    val = 0x07;
+  }
+  command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+  command(PCD8544_SETBIAS | val);
+  command(PCD8544_FUNCTIONSET);
+}
+
+void setContrast(uint8_t val) {
+  if (val > 0x7f) {
+    val = 0x7f;
+  }
+  command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+  command(PCD8544_SETVOP | val);
+  command(PCD8544_FUNCTIONSET);
 }
 
 void LcdInitialise(void)
 {
-    HAL_GPIO_WritePin(LCD_CE_GPIO_Port, LCD_CE_Pin, GPIO_PIN_SET);
     HAL_GPIO_WritePin(LCD_RST_GPIO_Port, LCD_RST_Pin, GPIO_PIN_RESET);
     delay_ms(1);
     HAL_GPIO_WritePin(LCD_RST_GPIO_Port, LCD_RST_Pin, GPIO_PIN_SET);
-    LcdWrite(LCD_C, 0x21 );  // LCD Extended Commands.
-    LcdWrite(LCD_C, 0xBA );  // Set LCD Vop (Contrast). Здесь константа в оригинале была B1 (c)flanker
-    LcdWrite(LCD_C, 0x04 );  // Set Temp coefficent. //0x04
-    LcdWrite(LCD_C, 0x14 );  // LCD bias mode 1:48. //0x13
-    LcdWrite(LCD_C, 0x20 );  // LCD Basic Commands
+    delay_ms(1);
+
+    HAL_GPIO_WritePin(LCD_CE_GPIO_Port, LCD_CE_Pin, GPIO_PIN_SET);
+    delay_ms(1);
+
+    setBias(0x04);
+    setContrast(40);
+
+    // normal mode
+    command(PCD8544_FUNCTIONSET);
+
+    // Set display to Normal
+    command(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+
+    // LcdWrite(LCD_C, 0x21 );  // LCD Extended Commands.
+    // LcdWrite(LCD_C, 0xBA );  // Set LCD Vop (Contrast). Здесь константа в оригинале была B1 (c)flanker
+    // LcdWrite(LCD_C, 0x04 );  // Set Temp coefficent. //0x04
+    // LcdWrite(LCD_C, 0x14 );  // LCD bias mode 1:48. //0x13
+    // LcdWrite(LCD_C, 0x20 );  // LCD Basic Commands
     LcdWrite(LCD_C, 0x0C );  // LCD in normal mode.
 }
 
@@ -193,9 +231,22 @@ void application()
     LOG_INFO("Version: %s", FW_VERSION);
     bool led = false;
 
-    LcdInitialise();
-    LcdClear();
-    LcdString("Hello World!");
+    // LcdInitialise();
+    // LcdClear();
+    // LcdString("Hello World!");
+
+    Adafruit_PCD8544 display = Adafruit_PCD8544(&hspi1);
+    display.setContrast(74);
+
+    display.display(); // show splashscreen
+    delay_ms(2000);
+    display.clearDisplay();   // clears the screen and buffer
+
+  // draw a single pixel
+  display.drawPixel(10, 10, BLACK);
+  display.display();
+  delay_ms(2000);
+  display.clearDisplay();
 
     while (1)
     {
