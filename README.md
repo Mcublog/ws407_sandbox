@@ -1,6 +1,6 @@
-# ws407_cmake_example
+# ws407_sandbox
 
-STM32 Cmake example
+Some code examples and experiments with STM32 and CMake.
 
 ![building](/doc/Peek_2022-10-25_21-34.gif)
 
