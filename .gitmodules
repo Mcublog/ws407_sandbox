@@ -1,3 +1,6 @@
 [submodule "libs/third_party/hw/ina219"]
 	path = libs/third_party/hw/ina219
 	url = https://github.com/libdriver/ina219.git
+[submodule "libs/hw/gmg12864"]
+	path = libs/hw/gmg12864
+	url = git@github.com:Mcublog/gmg12864.git
