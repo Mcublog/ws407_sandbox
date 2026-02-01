@@ -1,0 +1,3 @@
+file(GLOB_RECURSE DWT_SOURCES
+    ${PROJECT_SOURCE_DIR}/libs/hw/dwt/*.c
+)

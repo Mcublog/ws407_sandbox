@@ -1,6 +1,6 @@
-# ws407_cmake_example
+# ws407_sandbox
 
-STM32 Cmake example
+Some code examples and experiments with STM32 and CMake.
 
 ![building](/doc/Peek_2022-10-25_21-34.gif)
 
@@ -26,5 +26,5 @@ sudo apt install libncurses5
 
 ## Using debugger
 
-Project using [J-Link](https://www.segger.com/products/debug-probes/j-link/) for fw downloading and debuging.
-You need [install JLink driver and libraries](https://www.segger.com/downloads/jlink/) and add it to system environment PATH.
+* Project using [J-Link](https://www.segger.com/products/debug-probes/j-link/) for fw downloading and debuging.
+* You need [install JLink driver and libraries](https://www.segger.com/downloads/jlink/) and add it to system environment PATH.

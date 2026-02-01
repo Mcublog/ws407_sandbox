@@ -46,14 +46,24 @@
                 "-gui"
             ],
             "preLaunchTask": "CMake: build active target",
-            // "showDevDebugOutput":"raw"
-            // "preRestartCommands": [
-            //     "file ./build/bootloader/f205_boot",
-            //     "load",
-            //     "add-symbol-file ./build/pirit_2f/f205_fw 0x08004004",
-            //     "enable breakpoint",
-            //     "monitor reset"
-            //   ]
-        }
+        },
+        {
+            "type": "cortex-debug",
+            "request": "attach",
+            "name": "Attach Debug: MCU",
+            "cwd": "${workspaceRoot}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "servertype": "jlink",
+            "device": "STM32F407VE",
+            "interface": "swd",
+            "serialNumber": "", //If you have more than one J-Link probe, add the serial number here.
+            "runToEntryPoint": "main",
+            "svdFile": "${workspaceRoot}/targets/stm32f407/svd/STM32F407.svd",
+            "breakAfterReset": true,
+            "serverArgs": [
+                "-gui"
+            ],
+            "preLaunchTask": "CMake: build active target",
+        },
     ]
 }

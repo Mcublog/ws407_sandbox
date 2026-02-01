@@ -5,7 +5,7 @@
             "name": "WS407",
             "includePath": [
                 "${workspaceFolder}/app/**",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/targets/stm32f407/**"
             ],
             "defines": [
                 "ARM_MATH_CM4",

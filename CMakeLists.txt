@@ -32,6 +32,7 @@ LOG_INFO("MCU target:......." ${STM32F407F_TARGET})
 
 add_subdirectory(config)
 add_subdirectory(targets)
+add_subdirectory(hwtest)
 
 # Added color compiler output
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

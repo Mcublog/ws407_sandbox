@@ -1,20 +1,33 @@
 include(${PROJECT_SOURCE_DIR}/config/common.cmake)
 include(${PROJECT_SOURCE_DIR}/config/mcu.cmake)
+include(${PROJECT_SOURCE_DIR}/libs/hw/list.cmake)
+include(${PROJECT_SOURCE_DIR}/libs/third_party/hw/list.cmake)
 
 # Add sources
 file(GLOB_RECURSE HAL_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.c
     ${CMAKE_CURRENT_SOURCE_DIR}/*.s
-
 )
 
 file(GLOB_RECURSE APP_SOURCES ${APP_DIR}/*.c)
 
 # Build lib
-add_executable(${STM32F407F_TARGET} ${HAL_SOURCES} ${APP_SOURCES} ${RTT_SOURCES})
+add_executable(${STM32F407F_TARGET}
+    ${HAL_SOURCES}
+    ${APP_SOURCES}
+    ${RTT_SOURCES}
+    ${BME280_SOURCES}
+    ${DWT_SOURCES}
+)
 
 # Include paths
-target_include_directories(${STM32F407F_TARGET} PRIVATE ${HAL_INCLUDE_DIRS} ${APP_DIRS} ${RTT_INCLUDE_DIRS})
+target_include_directories(${STM32F407F_TARGET}
+    PRIVATE
+    ${PROJECT_SOURCE_DIR}
+    ${HAL_INCLUDE_DIRS}
+    ${APP_DIRS}
+    ${RTT_INCLUDE_DIRS}
+)
 
 # Project symbols
 target_compile_definitions(${STM32F407F_TARGET} PRIVATE ${symbols_SYMB})
@@ -32,3 +45,5 @@ add_custom_command(TARGET ${STM32F407F_TARGET}
     COMMAND ${CMAKE_OBJCOPY} ARGS -O ihex -I elf32-littlearm ${STM32F407F_TARGET} ${STM32F407F_TARGET}.hex
     COMMAND ${CMAKE_OBJCOPY} ARGS -O binary -I elf32-littlearm ${STM32F407F_TARGET} ${STM32F407F_TARGET}.bin
 )
+
+build_jlink_script(${STM32F407F_TARGET})

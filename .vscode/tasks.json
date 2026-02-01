@@ -25,17 +25,36 @@
         },
         {
             "type": "shell",
-            "label": "Debug: Run RTT",
-            "command": "t",
+            "label": "Flash: fw",
+            "command": "JLink",
+            "dependsOn": "CMake: build active target",
             "args": [
-                "JLinkRTTClient"
+                "-CommanderScript",
+                "${command:cmake.launchTargetPath}.jlink"
             ],
-            "presentation": {
-                "reveal": "never",
-                "echo": true
+            "group": "test"
+        },
+        {
+            "label": "Delete: build dir",
+            "type": "shell",
+            "windows": {
+                "command": "rm",
+                "args": [
+                    "build",
+                    "-r",
+                    "-force"
+                ]
             },
-            "group": {
-                "kind": "build",
+            "linux": {
+                "command": "rm",
+                "args": [
+                    "-rf",
+                    "build"
+                ]
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
             }
         }
     ]

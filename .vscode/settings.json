@@ -12,6 +12,9 @@
         "desktop"
     ],
     "files.associations": {
-        "common_type.h": "c"
-    }
+        "common_type.h": "c",
+        "i2c.h": "c"
+    },
+    "cmake.generator": "Unix Makefiles",
+    "task.autoDetect":"off",
 }

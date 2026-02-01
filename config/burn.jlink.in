@@ -1,0 +1,11 @@
+if SWD
+speed 4000
+Device STM32F407VE
+Con
+r
+h
+loadfile @CMAKE_BINARY_DIR@/output/@target@.hex
+r
+h
+g
+q

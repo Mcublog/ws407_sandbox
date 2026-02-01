@@ -1,2 +1,2 @@
 add_subdirectory(desktop)
-add_subdirectory(stm32f407)
+# add_subdirectory(stm32f407)
