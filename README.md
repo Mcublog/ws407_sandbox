@@ -26,5 +26,5 @@ sudo apt install libncurses5
 
 ## Using debugger
 
-Project using [J-Link](https://www.segger.com/products/debug-probes/j-link/) for fw downloading and debuging.
-You need [install JLink driver and libraries](https://www.segger.com/downloads/jlink/) and add it to system environment PATH.
+* Project using [J-Link](https://www.segger.com/products/debug-probes/j-link/) for fw downloading and debuging.
+* You need [install JLink driver and libraries](https://www.segger.com/downloads/jlink/) and add it to system environment PATH.
