@@ -1,7 +1,7 @@
 add_subdirectory(bme280)
-add_subdirectory(ssd1309)
 add_subdirectory(ina219)
 add_subdirectory(rtc)
 add_subdirectory(pcd8544)
 add_subdirectory(gmg12864)
 add_subdirectory(ssd1306_i2c)
+add_subdirectory(ssd1306_spi)

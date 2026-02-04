@@ -1,50 +1,23 @@
-include(${PROJECT_SOURCE_DIR}/config/common.cmake)
-include(${PROJECT_SOURCE_DIR}/config/mcu.cmake)
-include(${PROJECT_SOURCE_DIR}/hwtest/common.cmake)
+include(${PROJECT_SOURCE_DIR}/hwtest/build.cmake)
 include(${PROJECT_SOURCE_DIR}/libs/hw/list.cmake)
 include(${PROJECT_SOURCE_DIR}/libs/third_party/hw/list.cmake)
 
-set(HWTEST_TARGET hwtest_ssd1309)
-
-# Removed unused files
-list(REMOVE_ITEM APP_SOURCES ${APP_DIR}/application.c)
-
-# Build lib
-add_executable(${HWTEST_TARGET}
-    ${CMAKE_CURRENT_SOURCE_DIR}/application.cpp
-    ${HAL_SOURCES}
-    ${APP_SOURCES}
-    ${RTT_SOURCES}
-    ${BME280_SOURCES}
-    ${DWT_SOURCES}
-    ${SSD1309_SOURCES}
+file(GLOB_RECURSE CURRENT_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    #
+    ${gmg12864lib}
+    ${PROJECT_SOURCE_DIR}/libs/hw/gmg12864/src/ssd1306spi_dev.c
+    #
 )
 
-# Include paths
-target_include_directories(${HWTEST_TARGET}
-    PRIVATE
+set(CURRENT_INCLUDES
+    ${gmg12864_includes}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}
-    ${HAL_INCLUDE_DIRS}
-    ${APP_DIRS}
-    ${RTT_INCLUDE_DIRS}
 )
 
-# Project symbols
-target_compile_definitions(${HWTEST_TARGET} PRIVATE ${symbols_SYMB})
-
-# Compiler options
-target_compile_options(${HWTEST_TARGET} PRIVATE ${ARM_NONE_EABI_FLAGS})
-
-# Linker options
-target_link_options(${HWTEST_TARGET} PRIVATE ${STM32F407_LINKER_OPTION})
-
-# # Convert output to hex and binary
-add_custom_command(TARGET ${HWTEST_TARGET}
-    POST_BUILD
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMAND ${CMAKE_OBJCOPY} ARGS -O ihex -I elf32-littlearm ${HWTEST_TARGET} ${HWTEST_TARGET}.hex
-    COMMAND ${CMAKE_OBJCOPY} ARGS -O binary -I elf32-littlearm ${HWTEST_TARGET} ${HWTEST_TARGET}.bin
+set(CURRENT_DEFINES
+    # "GMG12864_OLED"
 )
 
-build_jlink_script(${HWTEST_TARGET})
+w407_hwtest_app_v1("hwtest_ssd1306_spi" "${CURRENT_INCLUDES}" "${CURRENT_SOURCES}" "${CURRENT_DEFINES}")

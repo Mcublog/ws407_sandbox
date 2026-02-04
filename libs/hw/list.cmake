@@ -6,12 +6,16 @@ set(gmg12864_includes
     ${PROJECT_SOURCE_DIR}/libs/hw/gmg12864/src
 )
 
-file(GLOB_RECURSE gmg12864_gmgdev
+file(GLOB_RECURSE gmg12864lib
     ${PROJECT_SOURCE_DIR}/libs/hw/gmg12864/src/gmg12864lib.c
+)
+
+file(GLOB_RECURSE gmg12864_gmgdev
+    ${gmg12864lib}
     ${PROJECT_SOURCE_DIR}/libs/hw/gmg12864/src/gmg12964dev.c
 )
 
 file(GLOB_RECURSE gmg12864_ssd1306dev
-    ${PROJECT_SOURCE_DIR}/libs/hw/gmg12864/src/gmg12864lib.c
+    ${gmg12864lib}
     ${PROJECT_SOURCE_DIR}/libs/hw/gmg12864/src/ssd1306dev.c
 )
